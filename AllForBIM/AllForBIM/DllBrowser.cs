@@ -19,7 +19,7 @@ namespace AllForBIM
             this.assembly = Assembly.LoadFile(this.revitAPIDllPath);
         }
 
-        internal IEnumerable<string> GetAllNamespaces()
+        internal IEnumerable<string> GetAllNamespaceNames()
         {
             var types = assembly.ExportedTypes;
 
@@ -27,17 +27,27 @@ namespace AllForBIM
                 .Distinct();
 
         }
-        internal IEnumerable<string> GetAllTypesOfNamespace(string nameSpace)
+        internal IEnumerable<string> GetAllTypeNamesByNSName(string nameSpace)
         {
             return assembly.ExportedTypes.Where(t => t.Namespace == nameSpace).Select(t => t.FullName);
         }
-
-        internal IEnumerable<MemberInfo> getAllMembersOfType(string typeName)
+        internal IEnumerable<MemberInfo> GetAllMemberNamesByTypeName(string typeName)
         {
             var t = assembly.ExportedTypes.FirstOrDefault(c => c.FullName == typeName);
             if (t == null)
                 return null;
             return t.GetMembers();
+        }
+
+        internal List<string> GetMethodFullInfo(string typeName, MemberInfo methodInfo)
+        {
+            var t = assembly.ExportedTypes.FirstOrDefault(x => x.FullName == typeName);
+            MemberInfo member = t.GetMembers().FirstOrDefault(mi => mi.MetadataToken == methodInfo.MetadataToken);
+            List<string> result = new List<string>();
+
+            //member.CustomAttributes.Select(att=>att.)
+
+            return result;
         }
     }
 }
